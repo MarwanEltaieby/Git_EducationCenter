@@ -3,19 +3,16 @@ package application.Objects;
 public class Course {
 	
 	private String courseName;
-	private int courseID;
-	private double coursePrice;
-	public static int numberOfCourses;
-	
+	private String instructor;
+	private int coursePrice;
+
 	public Course() {
-		numberOfCourses++;
 	}
 	
-	public Course(String courseName, int courseID, double coursePrice) {
+	public Course(String courseName, String instructor, int coursePrice) {
 		this.courseName = courseName;
-		this.courseID = courseID;
+		this.instructor = instructor;
 		this.coursePrice = coursePrice;
-		numberOfCourses++;
 	}
 
 	public String getCourseName() {
@@ -26,19 +23,20 @@ public class Course {
 		this.courseName = courseName;
 	}
 
-	public int getCourseID() {
-		return courseID;
-	}
 
-	public void setCourseID(int courseID) {
-		this.courseID = courseID;
-	}
-
-	public double getCoursePrice() {
+	public int getCoursePrice() {
 		return coursePrice;
 	}
 
-	public void setCoursePrice(double coursePrice) {
+	public void setCoursePrice(int coursePrice) {
 		this.coursePrice = coursePrice;
+	}
+
+	public String getInstructor() {
+		return instructor;
+	}
+
+	public void setInstructor(String instructor) {
+		this.instructor = instructor;
 	}
 }

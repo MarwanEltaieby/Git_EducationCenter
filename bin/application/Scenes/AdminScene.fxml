@@ -7,8 +7,7 @@
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#back" prefHeight="20.0" prefWidth="80.0" text="Back" />
       <Button layoutX="130.0" layoutY="100.0" mnemonicParsing="false" onAction="#getAddSecretaryScene" prefHeight="50.0" prefWidth="240.0" text="Add / Modify Secertary" />
-      <Button layoutX="130.0" layoutY="200.0" mnemonicParsing="false" onAction="#getCoursesScene" prefHeight="50.0" prefWidth="240.0" text="Add / Modify Courses" />
-      <Button layoutX="130.0" layoutY="400.0" mnemonicParsing="false" onAction="#getReportScene" prefHeight="50.0" prefWidth="240.0" text="Report" />
-      <Button layoutX="130.0" layoutY="300.0" mnemonicParsing="false" onAction="#getCreateSessionScene" prefHeight="50.0" prefWidth="240.0" text="Create Session" />
+      <Button layoutX="130.0" layoutY="225.0" mnemonicParsing="false" onAction="#getCoursesScene" prefHeight="50.0" prefWidth="240.0" text="Add / Modify Courses" />
+      <Button layoutX="130.0" layoutY="350.0" mnemonicParsing="false" onAction="#getReportScene" prefHeight="50.0" prefWidth="240.0" text="Report" />
    </children>
 </AnchorPane>

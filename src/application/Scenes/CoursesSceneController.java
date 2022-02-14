@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,13 +31,10 @@ public class CoursesSceneController implements Initializable {
 	
 	@FXML
 	private Button BackButton;
-	
-	@FXML
-    private TableColumn<Course, Integer> CourseIdColumn;
 
 	@FXML
-	private TextField CourseIdTextfield;
-	
+	private ChoiceBox<String> InstructorChoiceBox;
+
 	@FXML
 	private TableColumn<Course, String> CourseNameColumn;
 
@@ -44,7 +42,7 @@ public class CoursesSceneController implements Initializable {
 	private TextField CourseNameTextfield;
 
 	@FXML
-	private TableColumn<Course, Double> CoursePriceColumn;
+	private TableColumn<Course, Integer> CoursePriceColumn;
 
 	@FXML
 	private TextField CoursePriceTextField;
@@ -53,12 +51,16 @@ public class CoursesSceneController implements Initializable {
 	private TableView<Course> CoursesTableView;
 
 	@FXML
+	private TableColumn<Course, String> InstructorColumn;
+
+	@FXML
 	private Button SubmitButton;
-	
+
 	@FXML
 	private Label invalidLabel;
 
 	private ObservableList<Course> list = FXCollections.observableArrayList();
+	private ObservableList<String> instructorList = FXCollections.observableArrayList();
 	private Parent root;
 	private Scene scene;
 	private Stage stage;
@@ -66,13 +68,13 @@ public class CoursesSceneController implements Initializable {
 	public void submitCourse(ActionEvent event) throws ClassNotFoundException, SQLException {
 		try {
 			String courseName = CourseNameTextfield.getText();
-			int courseID = Integer.parseInt(CourseIdTextfield.getText());
-			double coursePrice = Double.parseDouble(CoursePriceTextField.getText());
-			new Course(courseName, courseID, coursePrice);
+			String instructor = InstructorChoiceBox.getValue();
+			int coursePrice = Integer.parseInt(CoursePriceTextField.getText());
+			new Course(courseName, instructor, coursePrice);
 			DatabaseConnector connector = new DatabaseConnector();
 			Connection connection = connector.getConnection();
 		
-			String insertCourse = "INSERT INTO courses VALUE(" + courseID + ", '" + courseName + "', " + coursePrice + ");";
+			String insertCourse = "INSERT INTO courses VALUE('" + courseName + "', '" + instructor + "', '" + coursePrice + "');";
 			
 			Statement statement =connection.createStatement();
 			statement.executeUpdate(insertCourse);
@@ -97,24 +99,31 @@ public class CoursesSceneController implements Initializable {
 			DatabaseConnector connector = new DatabaseConnector();
 			Connection con = connector.getConnection();
 			Statement st = con.createStatement();
-			String sql = "SELECT * FROM courses;";
-			ResultSet rs = st.executeQuery(sql);
+			String getInstructors = "SELECT instructor_username FROM instructor;";
+			ResultSet rs = st.executeQuery(getInstructors);
 			while(rs.next()) {
-				int id = rs.getInt(1);
-				String name = rs.getString(2);
-				double price = rs.getDouble(3);
-				Course course = new Course(name, id, price);
+				String instructor = rs.getString(1);
+				instructorList.add(instructor);
+			}
+			String sql = "SELECT * FROM courses;";
+			rs = st.executeQuery(sql);
+			while(rs.next()) {
+				String name = rs.getString(1);
+				String instructor = rs.getString(2);
+				int price = rs.getInt(3);
+				Course course = new Course(name, instructor, price);
 				list.add(course);
-			}	
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		CoursesTableView.setItems(list);
-		CourseIdColumn.setCellValueFactory(new PropertyValueFactory<Course, Integer>("courseID"));
+		InstructorChoiceBox.setItems(instructorList);
+		InstructorColumn.setCellValueFactory(new PropertyValueFactory<Course, String>("instructor"));
 		CourseNameColumn.setCellValueFactory(new PropertyValueFactory<Course, String>("courseName"));
-		CoursePriceColumn.setCellValueFactory(new PropertyValueFactory<Course, Double>("coursePrice"));
+		CoursePriceColumn.setCellValueFactory(new PropertyValueFactory<Course, Integer>("coursePrice"));
 	}
 	
 	public void getAdminScene(ActionEvent event) {
@@ -150,7 +159,7 @@ public class CoursesSceneController implements Initializable {
 			Statement st = con.createStatement();
 			int selectedID = CoursesTableView.getSelectionModel().getSelectedIndex();
 			Course selected = list.get(selectedID);
-			String sql = "DELETE FROM courses WHERE course_id = " + selected.getCourseID() + ";";
+			String sql = "DELETE FROM courses WHERE course_name = '" + selected.getCourseName() + "';";
 			st.executeUpdate(sql);
 			CoursesTableView.getItems().remove(selectedID);
 		}catch(Exception e) {
