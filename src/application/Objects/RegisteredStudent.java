@@ -6,9 +6,8 @@ import javafx.scene.control.TextField;
 
 public class RegisteredStudent extends Student {
 	
-	private int phone;
 	private String courseName;
-	private int previous_Payment;
+	private int previousPayment;
 	private TextField payment;
 	private CheckBox attendance1;
 	private CheckBox attendance2;
@@ -27,13 +26,12 @@ public class RegisteredStudent extends Student {
 	}
 	
 	public RegisteredStudent(String name, String phoneNumber, String college, int phone, String courseName,
-			int previous_Payment, TextField payment, CheckBox attendance1,
+			int previousPayment, TextField payment, CheckBox attendance1,
 			CheckBox attendance2, CheckBox attendance3, CheckBox attendance4, CheckBox attendance5, CheckBox attendance6,
 			CheckBox attendance7, CheckBox attendance8, CheckBox attendance9, CheckBox attendance10) {
 		super(name, phoneNumber, college);
-		this.phone = phone;
 		this.courseName = courseName;
-		this.previous_Payment = previous_Payment;
+		this.previousPayment = previousPayment;
 		this.payment = payment;
 		this.attendance1 = attendance1;
 		this.attendance2 = attendance2;
@@ -47,15 +45,6 @@ public class RegisteredStudent extends Student {
 		this.attendance10 = attendance10;
 	}
 
-	public int getPhone() {
-		return phone;
-	}
-
-
-	public void setPhone(int phone) {
-		this.phone = phone;
-	}
-
 
 	public String getCourseName() {
 		return courseName;
@@ -67,13 +56,13 @@ public class RegisteredStudent extends Student {
 	}
 
 
-	public int getPrevious_Payment() {
-		return previous_Payment;
+	public int getPreviousPayment() {
+		return previousPayment;
 	}
 
 
-	public void setPrevious_Payment(int previous_Payment) {
-		this.previous_Payment = previous_Payment;
+	public void setPreviousPayment(int previousPayment) {
+		this.previousPayment = previousPayment;
 	}
 
 
