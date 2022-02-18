@@ -1,28 +1,20 @@
 package application.Scenes;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import application.Objects.Attendance;
 import application.Objects.DatabaseConnector;
-import application.Objects.Payment;
+import application.Objects.StudentReport;
+import javafx.fxml.Initializable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -31,438 +23,326 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class ReportSceneController implements Initializable {
+	
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance10Column;
 
-    @FXML
-    private TableColumn<Attendance, CheckBox> AttendanceColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance1Column;
 
-    @FXML
-    private TableColumn<Attendance, Integer> AttendanceCourseIdColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance2Column;
 
-    @FXML
-    private TableColumn<Attendance, String> AttendanceDateColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance3Column;
 
-    @FXML
-    private TableColumn<Attendance, String> AttendanceNameColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance4Column;
 
-    @FXML
-    private TableColumn<Attendance, String> AttendancePhonenumberColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance5Column;
 
-    @FXML
-    private TableView<Attendance> AttendanceTableView;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance6Column;
 
-    @FXML
-    private ComboBox<Integer> CourseIdComboBox;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance7Column;
 
-    @FXML
-    private DatePicker DatePicker1;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance8Column;
 
-    @FXML
-    private DatePicker DatePicker2;
+	 @FXML
+	 private TableColumn<StudentReport, Character> Attendance9Column;
 
-    @FXML
-    private TableColumn<Payment, Double> PaymentColumn;
+	 @FXML
+	 private TableColumn<StudentReport, String> CollegeColumn;
 
-    @FXML
-    private TableColumn<Payment, Integer> PaymentCourseIdColumn;
+	 @FXML
+	 private ChoiceBox<String> CourseChoiceBox;
 
-    @FXML
-    private TableColumn<Payment, String> PaymentDateColumn;
+	 @FXML
+	 private TableColumn<StudentReport, String> CourseColumn;
 
-    @FXML
-    private TableColumn<Payment, String> PaymentNameColumn;
+	 @FXML
+	 private TableColumn<StudentReport, String> NameColumn;
 
-    @FXML
-    private TableColumn<Payment, String> PaymentPhonenumberColumn;
+	 @FXML
+	 private TableColumn<StudentReport, Integer> PaymentColumn;
 
-    @FXML
-    private TableView<Payment> PaymentTableView;
+	 @FXML
+	 private TableColumn<StudentReport, String> PhoneColumn;
 
-    @FXML
-    private TextField PhonenumberTextField;
+	 @FXML
+	 private TextField PhonenumberTextfield;
 
-    @FXML
-    private TableColumn<Attendance, Integer> SessionNumberColumn;
+	 @FXML
+	 private Label TitleLabel;
 
-    @FXML
-    private Label TotalAttendanceLabel;
+	 @FXML
+	 private TableView<StudentReport> myTableView;
+	    
+	 private ObservableList<StudentReport> list = FXCollections.observableArrayList();
+	    
+	 private ObservableList<String> courseList = FXCollections.observableArrayList();
+	    
+	 private Parent root;
+	    
+	 private Scene scene;
+	    
+	 private Stage stage;
 
-    @FXML
-    private Label TotalPaymentLabel;
-    
-    private ObservableList<Attendance> attendanceList = FXCollections.observableArrayList();
-    
-    private ObservableList<Payment> paymentList = FXCollections.observableArrayList();
-    
-    private ObservableList<Integer> CourseIdList = FXCollections.observableArrayList();
-    
-    private Stage stage;
-    
-    private Parent root;
-    
-    private Scene scene;
+	 public void filter(ActionEvent event) {
+			try {
+				list.clear();
+				String phoneNumber = PhonenumberTextfield.getText();
+				String course = CourseChoiceBox.getValue();
+				String sql = null;
+				if(phoneNumber == null && course == "All") {
+					sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+							+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
+							+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
+							+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
+							+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
+							+ "FROM registered_student JOIN student USING(student_phonenumber);";
+				} else if(phoneNumber != null && course == "All") {
+					sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+							+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
+							+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
+							+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
+							+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
+							+ "FROM registered_student JOIN student USING(student_phonenumber) WHERE student_phonenumber LIKE '" + phoneNumber + "%';";
+				} else if(phoneNumber != null && course != "All") {
+					sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+							+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
+							+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
+							+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
+							+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
+							+ "FROM registered_student JOIN student USING(student_phonenumber) WHERE student_phonenumber LIKE '" 
+							+ phoneNumber + "%' AND course_name = '" + course + "';";
+				} else if(phoneNumber == null && course != "All") {
+					sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+							+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
+							+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
+							+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
+							+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
+							+ "FROM registered_student JOIN student USING(student_phonenumber) WHERE course_name = '" + course + "';";
+				}
+				DatabaseConnector connector = new DatabaseConnector();
+				Connection con = connector.getConnection();
+				Statement st = con.createStatement();
+				ResultSet rs = st.executeQuery(sql);
+				while(rs.next()) {
+					String phone = rs.getString(1);
+					String name = rs.getString(2);
+					String college = rs.getString(3);
+					String courseName = rs.getString(4);
+					int payment = rs.getInt(5);
+					int attendance1 = rs.getInt(5);
+					int attendance2 = rs.getInt(6);
+					int attendance3 = rs.getInt(7);
+					int attendance4 = rs.getInt(8);
+					int attendance5 = rs.getInt(9);
+					int attendance6 = rs.getInt(10);
+					int attendance7 = rs.getInt(11);
+					int attendance8 = rs.getInt(12);
+					int attendance9 = rs.getInt(13);
+					int attendance10 = rs.getInt(14);
+					StudentReport student = new StudentReport();
+					student.setPhoneNumber(phone);
+					student.setName(name);
+					student.setCollege(college);
+					student.setCourseName(courseName);
+					student.setPayment(payment);
+					if(attendance1 == 1) {
+						student.setAttendance1('Y');
+					} else {
+						student.setAttendance1('N');
+					} 
+					if(attendance2 == 1) {
+						student.setAttendance2('Y');
+					} else {
+						student.setAttendance2('N');
+					}
+					if(attendance3 == 1) {
+						student.setAttendance3('Y');
+					} else {
+						student.setAttendance3('N');
+					}
+					if(attendance4 == 1) {
+						student.setAttendance4('Y');
+					} else {
+						student.setAttendance4('N');
+					}
+					if(attendance5 == 1) {
+						student.setAttendance5('Y');
+					} else {
+						student.setAttendance5('N');
+					}
+					if(attendance6 == 1) {
+						student.setAttendance6('Y');
+					} else {
+						student.setAttendance6('N');
+					}
+					if(attendance7 == 1) {
+						student.setAttendance7('Y');
+					} else {
+						student.setAttendance7('N');
+					}
+					if(attendance8 == 1) {
+						student.setAttendance8('Y');
+					} else {
+						student.setAttendance8('N');
+					}
+					if(attendance9 == 1) {
+						student.setAttendance9('Y');
+					} else {
+						student.setAttendance9('N');
+					}
+					if(attendance10 == 1) {
+						student.setAttendance10('Y');
+					} else {
+						student.setAttendance10('N');
+					}
+					list.add(student);
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+				e.getCause();
+			}
+			myTableView.setItems(list);
+			PhoneColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("phoneNumber"));
+			NameColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("name"));
+			CollegeColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("college"));
+			CourseColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("courseName"));
+			PaymentColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, Integer>("payment"));
+			Attendance1Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance1"));
+			Attendance2Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance2"));
+			Attendance3Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance3"));
+			Attendance4Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance4"));
+			Attendance5Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance5"));
+			Attendance6Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance6"));
+			Attendance7Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance7"));
+			Attendance8Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance8"));
+			Attendance9Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance9"));
+			Attendance10Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance10"));
+		}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
+			courseList.add("All");
+			CourseChoiceBox.setValue("All");
 			DatabaseConnector connector = new DatabaseConnector();
 			Connection con = connector.getConnection();
 			Statement st = con.createStatement();
-			String attendanceSQL = "SELECT student_phonenumber, student_name, course_id, session_number, "
-					+ "session_date, is_student_attended FROM registered_student_attendance JOIN student "
-					+ "USING(student_phonenumber) WHERE session_date = '" + LocalDate.now() + "';";
-			String paymentSQL = "SELECT student_phonenumber, student_name, course_id, payment, payment_date "
-					+ "FROM registered_student_payment JOIN student USING(student_phonenumber) WHERE payment_date ='"
-					+ LocalDate.now() + "';";
-			String sql = "SELECT course_id FROM courses;";
-			CourseIdList.add(0);
+			String sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+					+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
+					+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
+					+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
+					+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
+					+ "FROM registered_student JOIN student USING(student_phonenumber);";
 			ResultSet rs = st.executeQuery(sql);
 			while(rs.next()) {
-				int courseID = rs.getInt(1);
-				CourseIdList.add(courseID);
-			}
-		
-			rs = st.executeQuery(attendanceSQL);
-			while(rs.next()) {
-				Attendance attendance = new Attendance();
-				attendance.setPhoneNumber(rs.getString(1));
-				attendance.setStudentName(rs.getString(2));
-				attendance.setCourseID(rs.getInt(3));
-				attendance.setSessionNumber(rs.getInt(4));
-				attendance.setSessionDate(rs.getString(5));
-				CheckBox isAttended = new CheckBox();
-				if(rs.getInt(6) == 1) {
-					isAttended.setSelected(true);
-					attendance.setIsAttended(isAttended);
+				String phone = rs.getString(1);
+				String name = rs.getString(2);
+				String college = rs.getString(3);
+				String courseName = rs.getString(4);
+				int payment = rs.getInt(5);
+				int attendance1 = rs.getInt(5);
+				int attendance2 = rs.getInt(6);
+				int attendance3 = rs.getInt(7);
+				int attendance4 = rs.getInt(8);
+				int attendance5 = rs.getInt(9);
+				int attendance6 = rs.getInt(10);
+				int attendance7 = rs.getInt(11);
+				int attendance8 = rs.getInt(12);
+				int attendance9 = rs.getInt(13);
+				int attendance10 = rs.getInt(14);
+				StudentReport student = new StudentReport();
+				student.setPhoneNumber(phone);
+				student.setName(name);
+				student.setCollege(college);
+				student.setCourseName(courseName);
+				student.setPayment(payment);
+				if(attendance1 == 1) {
+					student.setAttendance1('Y');
 				} else {
-					isAttended.setSelected(false);
-					attendance.setIsAttended(isAttended);
+					student.setAttendance1('N');
+				} 
+				if(attendance2 == 1) {
+					student.setAttendance2('Y');
+				} else {
+					student.setAttendance2('N');
 				}
-				attendanceList.add(attendance);
+				if(attendance3 == 1) {
+					student.setAttendance3('Y');
+				} else {
+					student.setAttendance3('N');
+				}
+				if(attendance4 == 1) {
+					student.setAttendance4('Y');
+				} else {
+					student.setAttendance4('N');
+				}
+				if(attendance5 == 1) {
+					student.setAttendance5('Y');
+				} else {
+					student.setAttendance5('N');
+				}
+				if(attendance6 == 1) {
+					student.setAttendance6('Y');
+				} else {
+					student.setAttendance6('N');
+				}
+				if(attendance7 == 1) {
+					student.setAttendance7('Y');
+				} else {
+					student.setAttendance7('N');
+				}
+				if(attendance8 == 1) {
+					student.setAttendance8('Y');
+				} else {
+					student.setAttendance8('N');
+				}
+				if(attendance9 == 1) {
+					student.setAttendance9('Y');
+				} else {
+					student.setAttendance9('N');
+				}
+				if(attendance10 == 1) {
+					student.setAttendance10('Y');
+				} else {
+					student.setAttendance10('N');
+				}
+				list.add(student);
 			}
-			rs = st.executeQuery(paymentSQL);
+			String courseSQL = "SELECT course_name FROM courses;";
+			rs = st.executeQuery(courseSQL);
 			while(rs.next()) {
-				Payment payment = new Payment();
-				payment.setPhoneNumber(rs.getString(1));
-				payment.setStudentName(rs.getString(2));
-				payment.setCourseID(rs.getInt(3));
-				payment.setPayment(rs.getDouble(4));
-				payment.setPaymentDate(rs.getString(5));
-				paymentList.add(payment);
-			}
-			sql = "SELECT COUNT(student_phonenumber) FROM registered_student_attendance WHERE is_student_attended = '1';";
-			rs = st.executeQuery(sql);
-			String totalAttendance = "";
-			while(rs.next()) {
-				totalAttendance = rs.getString(1);
-			}
-			TotalAttendanceLabel.setText("(" + totalAttendance + ")");
-			sql = "SELECT payment FROM registered_student_payment WHERE payment_date ='"+ LocalDate.now() + "';";
-			rs = st.executeQuery(sql);
-			double sum = 0;
-			while(rs.next()) {
-				double payment = rs.getDouble(1);
-				sum += payment;
-			}
-			TotalPaymentLabel.setText("(" + sum + ")");
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		AttendanceTableView.setItems(attendanceList);
-		AttendancePhonenumberColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("phoneNumber"));
-		AttendanceNameColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("studentName"));
-		AttendanceCourseIdColumn.setCellValueFactory(new PropertyValueFactory<Attendance, Integer>("courseID"));
-		SessionNumberColumn.setCellValueFactory(new PropertyValueFactory<Attendance, Integer>("sessionNumber"));
-		AttendanceDateColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("sessionDate"));
-		AttendanceColumn.setCellValueFactory(new PropertyValueFactory<Attendance, CheckBox>("isAttended"));
-		CourseIdComboBox.setItems(CourseIdList);
-		PaymentTableView.setItems(paymentList);
-		PaymentPhonenumberColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("phoneNumber"));
-		PaymentNameColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("studentName"));
-		PaymentCourseIdColumn.setCellValueFactory(new PropertyValueFactory<Payment, Integer>("courseID"));
-		PaymentColumn.setCellValueFactory(new PropertyValueFactory<Payment, Double>("payment"));
-		PaymentDateColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("paymentDate"));
-	}
-	
-	public void search(ActionEvent event) {
-		try {
-			String phone = PhonenumberTextField.getText();
-			LocalDate date = DatePicker1.getValue();
-			DateTimeFormatter myFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String date1 = date.format(myFormatter);
-			date = DatePicker2.getValue();
-			String date2 = date.format(myFormatter);
-			int course = CourseIdComboBox.getValue();
-			DatabaseConnector connector = new DatabaseConnector();
-			Connection con = connector.getConnection();
-			Statement st = con.createStatement();
-			
-			
-			//1st condition (all input)
-			
-			
-			
-			if(!phone.equals("") && course != 0 && !date1.equals("") && !date2.equals("")) {
-				AttendanceTableView.getItems().clear();
-				PaymentTableView.getItems().clear();
-				String attendanceSqlEnding = "student_phonenumber LIKE '" + phone + "%' AND course_id = '" 
-						+ course + "' AND session_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY session_date DESC;";
-				String paymentSqlEnding = "student_phonenumber LIKE '" + phone + "%' AND course_id = '" 
-						+ course + "' AND payment_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY payment_date DESC;";
-				String attendanceSQL = "SELECT student_phonenumber, student_name, course_id, session_number, "
-						+ "session_date, is_student_attended FROM registered_student_attendance JOIN student "
-						+ "USING(student_phonenumber) WHERE " + attendanceSqlEnding;
-				String paymentSQL = "SELECT student_phonenumber, student_name, course_id, payment, payment_date "
-						+ "FROM registered_student_payment JOIN student USING(student_phonenumber) WHERE " + paymentSqlEnding;
-				ResultSet rs = st.executeQuery(attendanceSQL);
-				while(rs.next()) {
-					Attendance attendance = new Attendance();
-					attendance.setPhoneNumber(rs.getString(1));
-					attendance.setStudentName(rs.getString(2));
-					attendance.setCourseID(rs.getInt(3));
-					attendance.setSessionNumber(rs.getInt(4));
-					attendance.setSessionDate(rs.getString(5));
-					CheckBox isAttended = new CheckBox();
-					if(rs.getInt(6) == 1) {
-						isAttended.setSelected(true);
-						attendance.setIsAttended(isAttended);
-					} else {
-						isAttended.setSelected(false);
-						attendance.setIsAttended(isAttended);
-					}
-					attendanceList.add(attendance);
-				}
-				rs = st.executeQuery(paymentSQL);
-				while(rs.next()) {
-					Payment payment = new Payment();
-					payment.setPhoneNumber(rs.getString(1));
-					payment.setStudentName(rs.getString(2));
-					payment.setCourseID(rs.getInt(3));
-					payment.setPayment(rs.getDouble(4));
-					payment.setPaymentDate(rs.getString(5));
-					paymentList.add(payment);
-				}
-				String sql = "SELECT COUNT(student_phonenumber) FROM registered_student_attendance WHERE is_student_attended = '1' AND " + attendanceSqlEnding;
-				rs = st.executeQuery(sql);
-				String totalAttendance = "";
-				while(rs.next()) {
-					totalAttendance = rs.getString(1);
-				}
-				TotalAttendanceLabel.setText("(" + totalAttendance + ")");
-				sql = "SELECT payment FROM registered_student_payment WHERE " + paymentSqlEnding;
-				rs = st.executeQuery(sql);
-				double sum = 0;
-				while(rs.next()) {
-					double payment = rs.getDouble(1);
-					sum += payment;
-				}
-				TotalPaymentLabel.setText("(" + sum + ")");
-				
-				
-				//2nd condition (no phone)
-				
-				
-				
-			} else if(phone.equals("") && course != 0 && !date1.equals("") && !date2.equals("")) {
-				AttendanceTableView.getItems().clear();
-				PaymentTableView.getItems().clear();
-				String attendanceSqlEnding = "course_id = '" + course + "' AND session_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY session_date DESC;";
-				String paymentSqlEnding = "course_id = '" + course + "' AND payment_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY payment_date DESC;";
-				String attendanceSQL = "SELECT student_phonenumber, student_name, course_id, session_number, "
-						+ "session_date, is_student_attended FROM registered_student_attendance JOIN student "
-						+ "USING(student_phonenumber) WHERE " + attendanceSqlEnding;
-				String paymentSQL = "SELECT student_phonenumber, student_name, course_id, payment, payment_date "
-						+ "FROM registered_student_payment JOIN student USING(student_phonenumber) WHERE " + paymentSqlEnding;
-				ResultSet rs = st.executeQuery(attendanceSQL);
-				while(rs.next()) {
-					Attendance attendance = new Attendance();
-					attendance.setPhoneNumber(rs.getString(1));
-					attendance.setStudentName(rs.getString(2));
-					attendance.setCourseID(rs.getInt(3));
-					attendance.setSessionNumber(rs.getInt(4));
-					attendance.setSessionDate(rs.getString(5));
-					CheckBox isAttended = new CheckBox();
-					if(rs.getInt(6) == 1) {
-						isAttended.setSelected(true);
-						attendance.setIsAttended(isAttended);
-					} else {
-						isAttended.setSelected(false);
-						attendance.setIsAttended(isAttended);
-					}
-					attendanceList.add(attendance);
-				}
-				rs = st.executeQuery(paymentSQL);
-				while(rs.next()) {
-					Payment payment = new Payment();
-					payment.setPhoneNumber(rs.getString(1));
-					payment.setStudentName(rs.getString(2));
-					payment.setCourseID(rs.getInt(3));
-					payment.setPayment(rs.getDouble(4));
-					payment.setPaymentDate(rs.getString(5));
-					paymentList.add(payment);
-				}
-				String sql = "SELECT COUNT(student_phonenumber) FROM registered_student_attendance WHERE is_student_attended = '1' AND " + attendanceSqlEnding;
-				rs = st.executeQuery(sql);
-				String totalAttendance = "";
-				while(rs.next()) {
-					totalAttendance = rs.getString(1);
-				}
-				TotalAttendanceLabel.setText("(" + totalAttendance + ")");
-				sql = "SELECT payment FROM registered_student_payment WHERE " + paymentSqlEnding;
-				rs = st.executeQuery(sql);
-				double sum = 0;
-				while(rs.next()) {
-					double payment = rs.getDouble(1);
-					sum += payment;
-				}
-				TotalPaymentLabel.setText("(" + sum + ")");
-				
-				
-				//3rd condition (no course)
-				
-				
-				
-			} else if(!phone.equals("") && course == 0 && !date1.equals("") && !date2.equals("")) {
-				AttendanceTableView.getItems().clear();
-				PaymentTableView.getItems().clear();
-				String attendanceSqlEnding = "student_phonenumber LIKE '" + phone + "%' AND session_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY session_date DESC;";
-				String paymentSqlEnding = "student_phonenumber LIKE '" + phone + "%' AND payment_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY payment_date DESC;";
-				String attendanceSQL = "SELECT student_phonenumber, student_name, course_id, session_number, "
-						+ "session_date, is_student_attended FROM registered_student_attendance JOIN student "
-						+ "USING(student_phonenumber) WHERE " + attendanceSqlEnding;
-				String paymentSQL = "SELECT student_phonenumber, student_name, course_id, payment, payment_date "
-						+ "FROM registered_student_payment JOIN student USING(student_phonenumber) WHERE " + paymentSqlEnding;
-				ResultSet rs = st.executeQuery(attendanceSQL);
-				while(rs.next()) {
-					Attendance attendance = new Attendance();
-					attendance.setPhoneNumber(rs.getString(1));
-					attendance.setStudentName(rs.getString(2));
-					attendance.setCourseID(rs.getInt(3));
-					attendance.setSessionNumber(rs.getInt(4));
-					attendance.setSessionDate(rs.getString(5));
-					CheckBox isAttended = new CheckBox();
-					if(rs.getInt(6) == 1) {
-						isAttended.setSelected(true);
-						attendance.setIsAttended(isAttended);
-					} else {
-						isAttended.setSelected(false);
-						attendance.setIsAttended(isAttended);
-					}
-					attendanceList.add(attendance);
-				}
-				rs = st.executeQuery(paymentSQL);
-				while(rs.next()) {
-					Payment payment = new Payment();
-					payment.setPhoneNumber(rs.getString(1));
-					payment.setStudentName(rs.getString(2));
-					payment.setCourseID(rs.getInt(3));
-					payment.setPayment(rs.getDouble(4));
-					payment.setPaymentDate(rs.getString(5));
-					paymentList.add(payment);
-				}
-				String sql = "SELECT COUNT(student_phonenumber) FROM registered_student_attendance WHERE is_student_attended = '1' AND " + attendanceSqlEnding;
-				rs = st.executeQuery(sql);
-				String totalAttendance = "";
-				while(rs.next()) {
-					totalAttendance = rs.getString(1);
-				}
-				TotalAttendanceLabel.setText("(" + totalAttendance + ")");
-				sql = "SELECT payment FROM registered_student_payment WHERE " + paymentSqlEnding;
-				rs = st.executeQuery(sql);
-				double sum = 0;
-				while(rs.next()) {
-					double payment = rs.getDouble(1);
-					sum += payment;
-				}
-				TotalPaymentLabel.setText("(" + sum + ")");
-				
-				
-				//4th condition (no phone, no course)
-				
-				
-			} else if(phone.equals("") && course == 0 && !date1.equals("") && !date2.equals("")) {
-				AttendanceTableView.getItems().clear();
-				PaymentTableView.getItems().clear();
-				String attendanceSqlEnding = "session_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY session_date DESC;";
-				String paymentSqlEnding = "payment_date BETWEEN '" + date1 + "' AND '" + date2 + "' ORDER BY payment_date DESC;";
-				String attendanceSQL = "SELECT student_phonenumber, student_name, course_id, session_number, "
-						+ "session_date, is_student_attended FROM registered_student_attendance JOIN student "
-						+ "USING(student_phonenumber) WHERE " + attendanceSqlEnding;
-				String paymentSQL = "SELECT student_phonenumber, student_name, course_id, payment, payment_date "
-						+ "FROM registered_student_payment JOIN student USING(student_phonenumber) WHERE " + paymentSqlEnding;
-				ResultSet rs = st.executeQuery(attendanceSQL);
-				while(rs.next()) {
-					Attendance attendance = new Attendance();
-					attendance.setPhoneNumber(rs.getString(1));
-					attendance.setStudentName(rs.getString(2));
-					attendance.setCourseID(rs.getInt(3));
-					attendance.setSessionNumber(rs.getInt(4));
-					attendance.setSessionDate(rs.getString(5));
-					CheckBox isAttended = new CheckBox();
-					if(rs.getInt(6) == 1) {
-						isAttended.setSelected(true);
-						attendance.setIsAttended(isAttended);
-					} else {
-						isAttended.setSelected(false);
-						attendance.setIsAttended(isAttended);
-					}
-					attendanceList.add(attendance);
-				}
-				rs = st.executeQuery(paymentSQL);
-				while(rs.next()) {
-					Payment payment = new Payment();
-					payment.setPhoneNumber(rs.getString(1));
-					payment.setStudentName(rs.getString(2));
-					payment.setCourseID(rs.getInt(3));
-					payment.setPayment(rs.getDouble(4));
-					payment.setPaymentDate(rs.getString(5));
-					paymentList.add(payment);
-				}
-				String sql = "SELECT COUNT(student_phonenumber) FROM registered_student_attendance WHERE is_student_attended = '1' AND " + attendanceSqlEnding;
-				rs = st.executeQuery(sql);
-				String totalAttendance = "";
-				while(rs.next()) {
-					totalAttendance = rs.getString(1);
-				}
-				TotalAttendanceLabel.setText("(" + totalAttendance + ")");
-				sql = "SELECT payment FROM registered_student_payment WHERE " + paymentSqlEnding;
-				rs = st.executeQuery(sql);
-				double sum = 0;
-				while(rs.next()) {
-					double payment = rs.getDouble(1);
-					sum += payment;
-				}
-				TotalPaymentLabel.setText("(" + sum + ")");
+				String courseName = rs.getString(1);
+				courseList.add(courseName);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			e.getCause();
 		}
-		AttendanceTableView.setItems(attendanceList);
-		AttendancePhonenumberColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("phoneNumber"));
-		AttendanceNameColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("studentName"));
-		AttendanceCourseIdColumn.setCellValueFactory(new PropertyValueFactory<Attendance, Integer>("courseID"));
-		SessionNumberColumn.setCellValueFactory(new PropertyValueFactory<Attendance, Integer>("sessionNumber"));
-		AttendanceDateColumn.setCellValueFactory(new PropertyValueFactory<Attendance, String>("sessionDate"));
-		AttendanceColumn.setCellValueFactory(new PropertyValueFactory<Attendance, CheckBox>("isAttended"));
-		CourseIdComboBox.setItems(CourseIdList);
-		PaymentTableView.setItems(paymentList);
-		PaymentPhonenumberColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("phoneNumber"));
-		PaymentNameColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("studentName"));
-		PaymentCourseIdColumn.setCellValueFactory(new PropertyValueFactory<Payment, Integer>("courseID"));
-		PaymentColumn.setCellValueFactory(new PropertyValueFactory<Payment, Double>("payment"));
-		PaymentDateColumn.setCellValueFactory(new PropertyValueFactory<Payment, String>("paymentDate"));
+		CourseChoiceBox.setItems(courseList);
+		myTableView.setItems(list);
+		PhoneColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("phoneNumber"));
+		NameColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("name"));
+		CollegeColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("college"));
+		CourseColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, String>("courseName"));
+		PaymentColumn.setCellValueFactory(new PropertyValueFactory<StudentReport, Integer>("payment"));
+		Attendance1Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance1"));
+		Attendance2Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance2"));
+		Attendance3Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance3"));
+		Attendance4Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance4"));
+		Attendance5Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance5"));
+		Attendance6Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance6"));
+		Attendance7Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance7"));
+		Attendance8Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance8"));
+		Attendance9Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance9"));
+		Attendance10Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance10"));
 	}
-	
-	public void getAdminScene(ActionEvent event) {
-    	try {
-			root = FXMLLoader.load(getClass().getResource("AdminScene.fxml"));
-			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-			scene = new Scene(root);
-			stage.setScene(scene);
-			stage.setResizable(false);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-}
 
+}

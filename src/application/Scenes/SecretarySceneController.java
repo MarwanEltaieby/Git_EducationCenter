@@ -260,30 +260,30 @@ public class SecretarySceneController implements Initializable {
 			String course = CourseChoiceBox.getValue();
 			String sql = null;
 			if(phoneNumber == null && course == "All") {
-				sql = "SELECT registered_student.student_phonenumber, student.student_name, registered_student.course_name, "
-						+ "registered_student.previous_payment, registered_student.attendance_1, "
+				sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+						+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
 						+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
 						+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
 						+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
 						+ "FROM registered_student JOIN student USING(student_phonenumber);";
 			} else if(phoneNumber != null && course == "All") {
-				sql = "SELECT registered_student.student_phonenumber, student.student_name, registered_student.course_name, "
-						+ "registered_student.previous_payment, registered_student.attendance_1, "
+				sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+						+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
 						+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
 						+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
 						+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
 						+ "FROM registered_student JOIN student USING(student_phonenumber) WHERE student_phonenumber LIKE '" + phoneNumber + "%';";
 			} else if(phoneNumber != null && course != "All") {
-				sql = "SELECT registered_student.student_phonenumber, student.student_name, registered_student.course_name, "
-						+ "registered_student.previous_payment, registered_student.attendance_1, "
+				sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+						+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
 						+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
 						+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
 						+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
 						+ "FROM registered_student JOIN student USING(student_phonenumber) WHERE student_phonenumber LIKE '" 
 						+ phoneNumber + "%' AND course_name = '" + course + "';";
 			} else if(phoneNumber == null && course != "All") {
-				sql = "SELECT registered_student.student_phonenumber, student.student_name, registered_student.course_name, "
-						+ "registered_student.previous_payment, registered_student.attendance_1, "
+				sql = "SELECT registered_student.student_phonenumber, student.student_name, student.student_college, "
+						+ "registered_student.course_name, registered_student.previous_payment, registered_student.attendance_1, "
 						+ "registered_student.attendance_2, registered_student.attendance_3, registered_student.attendance_4, "
 						+ "registered_student.attendance_5, registered_student.attendance_6, registered_student.attendance_7, "
 						+ "registered_student.attendance_8, registered_student.attendance_9, registered_student.attendance_10 "
