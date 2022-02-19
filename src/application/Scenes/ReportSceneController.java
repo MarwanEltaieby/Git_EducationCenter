@@ -1,10 +1,22 @@
 package application.Scenes;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import application.Objects.DatabaseConnector;
 import application.Objects.StudentReport;
 import javafx.fxml.Initializable;
@@ -12,6 +24,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -344,5 +358,116 @@ public class ReportSceneController implements Initializable {
 		Attendance9Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance9"));
 		Attendance10Column.setCellValueFactory(new PropertyValueFactory<StudentReport, Character>("attendance10"));
 	}
+	
+	public void exportPDF(ActionEvent event) {
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4.rotate());
+			document.setMargins(-90f, -90f, 10f, 10f);
+			PdfWriter.getInstance(document, new FileOutputStream("PDFs\\pdfile.pdf"));
+			
+			document.open();
+			//add table
+			float columnWidth[] = {150f, 350f, 150f, 200f, 100f, 35f, 35f, 35f, 35f, 35f, 35f, 35f, 35f, 35f, 35f};
+			PdfPTable table = new PdfPTable(15);
+			table.setWidths(columnWidth);
+			PdfPCell c1 = new PdfPCell(new Phrase("Phone"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+	
+			c1 = new PdfPCell(new Phrase("Name"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+			
+			c1 = new PdfPCell(new Phrase("College"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+	
+			c1 = new PdfPCell(new Phrase("Course"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("Payment"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("1"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("2"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("3"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("4"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("5"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("6"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("7"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("8"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("9"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+		
+			c1 = new PdfPCell(new Phrase("10"));
+			c1.setBackgroundColor(BaseColor.GREEN);
+			table.addCell(c1);
+			table.setHeaderRows(1);
+			
+			for(StudentReport selected : list) {
+				table.addCell(selected.getPhoneNumber());
+				table.addCell(selected.getName());
+				table.addCell(selected.getCollege());
+				table.addCell(selected.getCourseName());
+				table.addCell(Integer.toString(selected.getPayment()));
+				table.addCell(Character.toString(selected.getAttendance1()));
+				table.addCell(Character.toString(selected.getAttendance2()));
+				table.addCell(Character.toString(selected.getAttendance3()));
+				table.addCell(Character.toString(selected.getAttendance4()));
+				table.addCell(Character.toString(selected.getAttendance5()));
+				table.addCell(Character.toString(selected.getAttendance6()));
+				table.addCell(Character.toString(selected.getAttendance7()));
+				table.addCell(Character.toString(selected.getAttendance8()));
+				table.addCell(Character.toString(selected.getAttendance9()));
+				table.addCell(Character.toString(selected.getAttendance10()));
+			}
+			document.add(table);
+			document.close();
+		} catch (DocumentException e) {
+				e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public void back(ActionEvent event) {
+		try {
+			root = FXMLLoader.load(getClass().getResource("AdminScene.fxml"));
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

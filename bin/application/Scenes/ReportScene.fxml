@@ -27,7 +27,7 @@
             <TableColumn fx:id="Attendance7Column" prefWidth="45.0" resizable="false" sortable="false" text="7" />
             <TableColumn fx:id="Attendance8Column" prefWidth="45.0" resizable="false" sortable="false" text="8" />
             <TableColumn fx:id="Attendance9Column" minWidth="0.0" prefWidth="45.0" resizable="false" sortable="false" text="9" />
-            <TableColumn fx:id="Attendance10Column" prefWidth="44.0" resizable="false" sortable="false" text="10" />
+            <TableColumn fx:id="Attendance10Column" prefWidth="43.0" resizable="false" sortable="false" text="10" />
          </columns></TableView>
       <Label layoutX="12.0" layoutY="79.0" text="Phone Number:">
          <font>
@@ -47,5 +47,7 @@
             <Font size="36.0" />
          </font>
       </Label>
+      <Button layoutX="1052.0" layoutY="701.0" mnemonicParsing="false" onAction="#exportPDF" prefHeight="25.0" prefWidth="100.0" text="Export PDF" />
+      <Button layoutX="11.0" layoutY="14.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="100.0" text="Back" />
    </children>
 </AnchorPane>
