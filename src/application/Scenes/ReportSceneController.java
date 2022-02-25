@@ -262,16 +262,16 @@ public class ReportSceneController implements Initializable {
 				String college = rs.getString(3);
 				String courseName = rs.getString(4);
 				int payment = rs.getInt(5);
-				int attendance1 = rs.getInt(5);
-				int attendance2 = rs.getInt(6);
-				int attendance3 = rs.getInt(7);
-				int attendance4 = rs.getInt(8);
-				int attendance5 = rs.getInt(9);
-				int attendance6 = rs.getInt(10);
-				int attendance7 = rs.getInt(11);
-				int attendance8 = rs.getInt(12);
-				int attendance9 = rs.getInt(13);
-				int attendance10 = rs.getInt(14);
+				int attendance1 = rs.getInt(6);
+				int attendance2 = rs.getInt(7);
+				int attendance3 = rs.getInt(8);
+				int attendance4 = rs.getInt(9);
+				int attendance5 = rs.getInt(10);
+				int attendance6 = rs.getInt(11);
+				int attendance7 = rs.getInt(12);
+				int attendance8 = rs.getInt(13);
+				int attendance9 = rs.getInt(14);
+				int attendance10 = rs.getInt(15);
 				StudentReport student = new StudentReport();
 				student.setPhoneNumber(phone);
 				student.setName(name);
@@ -364,7 +364,7 @@ public class ReportSceneController implements Initializable {
 			Document document = new Document();
 			document.setPageSize(PageSize.A4.rotate());
 			document.setMargins(-90f, -90f, 10f, 10f);
-			PdfWriter.getInstance(document, new FileOutputStream("PDFs\\pdfile.pdf"));
+			PdfWriter.getInstance(document, new FileOutputStream("PDFs\\Report.pdf"));
 			
 			document.open();
 			//add table

@@ -164,6 +164,46 @@ public class StudentRegistrationSceneController implements Initializable {
 		    return false;  
 		  }  
 		}
-    
+     
+	public void reRegisterStudent(ActionEvent event) {
+		try {
+			if(StudentPhonenumberTextField.getText().length() == 11 && isNumeric(StudentPhonenumberTextField.getText())) {
+				String phoneNumber = StudentPhonenumberTextField.getText();
+				String course = CourseNameChoiceBox.getValue();
+			 
+				DatabaseConnector connector = new DatabaseConnector();
+				Connection connection = connector.getConnection();
+				
+				String verifySql = "SELECT student_phonenumber FROM student";
+				String sql2 = "INSERT INTO registered_student(student_phonenumber, course_name) VALUE( '" + phoneNumber + "', '" + course + "');";
+				
+				boolean isVerified = false;
+				Statement st = connection.createStatement();
+				ResultSet rs = st.executeQuery(verifySql);
+				while(rs.next()) {
+					if(rs.getString(1).equals(phoneNumber)) {
+						isVerified = true;
+						break;
+					}
+				}
+				if(isVerified) {
+					st.executeUpdate(sql2);
+					root = FXMLLoader.load(getClass().getResource("SecretaryScene.fxml"));
+					stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+					scene = new Scene(root);
+					stage.setScene(scene);
+					stage.setResizable(false);
+					stage.show();
+				} else {
+					invalidLabel.setText("Invalid PhoneNumber!");
+				}
+			}else {
+				invalidLabel.setText("Invalid PhoneNumber!");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			invalidLabel.setText("Error!");
+		}
+	}
     
 }

@@ -794,4 +794,29 @@ public class SecretarySceneController implements Initializable {
 			e.getCause();
 		}
 	}
+	public void back(ActionEvent event) {
+		try {
+			root = FXMLLoader.load(getClass().getResource("FirstScene.fxml"));
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getReRegisterStudent(ActionEvent event) {
+		try {
+			root = FXMLLoader.load(getClass().getResource("StudentRe-RegistrationScene.fxml"));
+			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+			scene = new Scene(root);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

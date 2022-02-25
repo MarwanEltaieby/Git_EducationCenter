@@ -2,54 +2,54 @@ package application.Objects;
 
 public class Payment {
 	
-	private String phoneNumber;
-	private String studentName;
-	private int courseID;
-	private double payment;
+	private String phone;
+	private String name;
+	private String courseName;
+	private int payment;
 	private String paymentDate;
 	
-	public Payment(String phoneNumber, String studentName, int courseID, double payment, String paymentDate) {
-		super();
-		this.phoneNumber = phoneNumber;
-		this.studentName = studentName;
-		this.courseID = courseID;
-		this.payment = payment;
-		this.paymentDate = paymentDate;
-	}
-
 	public Payment() {
 		super();
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public Payment(String phone, String name, String courseName, int payment, String payemntDate) {
+		super();
+		this.phone = phone;
+		this.name = name;
+		this.courseName = courseName;
+		this.payment = payment;
+		this.paymentDate = payemntDate;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public String getPhone() {
+		return phone;
 	}
 
-	public String getStudentName() {
-		return studentName;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
+	public String getName() {
+		return name;
 	}
 
-	public int getCourseID() {
-		return courseID;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setCourseID(int courseID) {
-		this.courseID = courseID;
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public double getPayment() {
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public int getPayment() {
 		return payment;
 	}
 
-	public void setPayment(double payment) {
+	public void setPayment(int payment) {
 		this.payment = payment;
 	}
 
